@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TWSE_Trade_Web_API.Models;
@@ -39,7 +40,7 @@ namespace TWSE_Trade_Web_API.Profiles
                 )
                 .ForMember(
                     member => member.TradeDate,
-                    opt => opt.MapFrom(src => DateTime.Parse(src[0].ToString()))
+                    opt => opt.MapFrom(src => TransformDateTime(src[0].ToString()))
                 )
                 .ForMember(
                     member => member.Price,
@@ -53,7 +54,7 @@ namespace TWSE_Trade_Web_API.Profiles
                 )
                 .ForMember(
                     member => member.TradeDate,
-                    opt => opt.MapFrom(src => DateTime.Parse(src[0].ToString()))
+                    opt => opt.MapFrom(src => TransformDateTime(src[0].ToString()))
                 )
                 .ForMember(
                     member => member.Type,
@@ -99,6 +100,13 @@ namespace TWSE_Trade_Web_API.Profiles
                 default:
                     return "X";
             }
+        }
+        private static DateTime TransformDateTime(string twDateString)
+        {
+            // 時間日期 民國112年1月1號 -> 20230101
+            CultureInfo culture = new CultureInfo("zh-TW");
+            culture.DateTimeFormat.Calendar = new TaiwanCalendar();
+            return DateTime.Parse(twDateString, culture);
         }
     }
 }

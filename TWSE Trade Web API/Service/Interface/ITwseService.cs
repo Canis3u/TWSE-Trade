@@ -7,6 +7,6 @@ namespace TWSE_Trade_Web_API.Service.Interface
 {
     public interface ITwseService
     {
-       Task<int> UpdateDatabaseAsync(string endDate);
+       Task<string> UpdateDatabaseAsync(string endDate);
     }
 }
