@@ -25,7 +25,7 @@ namespace TWSE_Trade_Web_API.Service
         public async Task<String> UpdateDatabaseAsync(string endDate)
         {
             var startDate = _twseTradeContext.Trades.OrderByDescending(x=>x.TradeDate).FirstOrDefault()?.TradeDate.AddDays(1).ToString("yyyyMMdd");
-            var responseBodyString = await GetDataFromAPI(startDate??"20230101",endDate);
+            var responseBodyString = await GetDataFromAPIAsync(startDate??"20230101",endDate);
             var tqvm = ExtractData(responseBodyString);
             if (tqvm.data != null && tqvm.data.Any())
             {
@@ -46,8 +46,8 @@ namespace TWSE_Trade_Web_API.Service
             using (TransactionScope ts = new TransactionScope())
             {
                 // Clean StockList
-                var stockIdsInDB = _twseTradeContext.Stocks.Select(x => x.StockId).ToList(); // 找出要加入但已經存在DB的stockID
-                var stocks = new List<Stock>();
+                var stockIdsInDB = _twseTradeContext.Stocks.Select(x => x.StockId).ToList(); // 找出已經存在DB的stockID
+                var stocks = new List<Stock>(); // 用個list存要加入的stock
                 foreach (Stock stock in stockList)
                 {
                     if (!stockIdsInDB.Contains(stock.StockId))
@@ -58,8 +58,9 @@ namespace TWSE_Trade_Web_API.Service
                 }
 
                 // Clean ClosingPriceList
-                var closingPriceStringsInDB = _twseTradeContext.ClosingPrices.Select(x => $"{x.StockId}{x.TradeDate.ToShortDateString()}").ToList();
-                var closingPrices = new List<ClosingPrice>();
+                // 因為一次要比兩個欄位, 乾脆直接組合成字串
+                var closingPriceStringsInDB = _twseTradeContext.ClosingPrices.Select(x => $"{x.StockId}{x.TradeDate.ToShortDateString()}").ToList(); // 找出已經存在DB的字串組合
+                var closingPrices = new List<ClosingPrice>(); // 用個list存要加入的ClosingPrice
                 foreach (ClosingPrice closingPrice in closingPriceList)
                 {
                     var closingPricestring = $"{closingPrice.StockId}{closingPrice.TradeDate.ToShortDateString()}";
@@ -94,7 +95,7 @@ namespace TWSE_Trade_Web_API.Service
             return rowschanges;            
 
         }
-        static private async Task<string> GetDataFromAPI(string startDate, string endDate)
+        static private async Task<string> GetDataFromAPIAsync(string startDate, string endDate)
         {
             Console.WriteLine($"startDate={startDate}&endDate={endDate}");
             var uri = $"https://www.twse.com.tw/rwd/zh/lending/t13sa710?startDate={startDate}&endDate={endDate}&tradeType=&stockNo=&response=json";
