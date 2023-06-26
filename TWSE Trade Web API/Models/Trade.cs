@@ -19,7 +19,6 @@ namespace TWSE_Trade_Web_API.Models
         public DateTime? CreateDate { get; set; }
         public string UpdateUser { get; set; }
         public DateTime? UpdateDate { get; set; }
-
         public virtual Stock Stock { get; set; }
     }
 }

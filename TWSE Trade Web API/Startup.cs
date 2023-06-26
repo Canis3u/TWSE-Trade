@@ -42,6 +42,7 @@ namespace TWSE_Trade_Web_API
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<ITwseRequestHelper, TwseRequestHelper>();
             services.AddScoped<ITwseService, TwseService>();
+            services.AddScoped<ITradeService, TradeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
