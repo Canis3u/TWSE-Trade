@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.Globalization;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -31,7 +33,32 @@ namespace TWSE_Trade_Web_API.Helpers
             };
             // Response string to ServiceModel
             var tqvm = JsonSerializer.Deserialize<TwseServiceModel>(responseString,options);
+            ValidTradeDate(tqvm, startDate, endDate);
             return tqvm;
+        }
+        private void ValidTradeDate(TwseServiceModel tqvm, string startDate, string endDate)
+        {
+            CultureInfo culture = new CultureInfo("zh-TW");
+            culture.DateTimeFormat.Calendar = new TaiwanCalendar();
+            DateTime date;
+            foreach (var d in tqvm.data)
+            {
+                try
+                {
+                    date = DateTime.Parse(d[0].ToString(), culture);
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Date Format Error.");
+                }
+                // Danny寫ㄉ
+                int ddate = int.Parse(date.ToString("yyyyMMdd"));
+                int sdate = int.Parse(startDate);
+                int edate = int.Parse(endDate);
+                // 到這都是
+                if (ddate < sdate || ddate > edate)
+                    throw new Exception("Date out of range.");
+            }
         }
     }
 }

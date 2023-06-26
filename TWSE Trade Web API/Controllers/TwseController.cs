@@ -21,14 +21,28 @@ namespace TWSE_Trade_Web_API.Controllers
         public async Task<IActionResult> UpdateDB()
         {
             // For Debug
-            var trsm = await _twseService.UpdateDBFromTwseAPIAsync("20230103");
-            return Ok(trsm);
+            try
+            {
+                var trsm = await _twseService.UpdateDBFromTwseAPIAsync("20230103");
+                return Ok(trsm);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         [HttpGet("{endDate}")]
         public async Task<IActionResult> UpdateDBWithEndDateAsync(string endDate)
         {
-            var trsm = await _twseService.UpdateDBFromTwseAPIAsync(endDate);
-            return Ok(trsm);
+            try
+            {
+                var trsm = await _twseService.UpdateDBFromTwseAPIAsync(endDate);
+                return Ok(trsm);
+            }
+            catch(Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 
