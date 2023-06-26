@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,17 +16,19 @@ namespace TWSE_Trade_Web_API.Service
 {
     public class TwseService : ITwseService
     {
+        public IConfiguration _configuration { get; }
         private readonly TWSETradeContext _twseTradeContext;
         private readonly IMapper _mapper;
-        public TwseService(TWSETradeContext twseTradeContext, IMapper mapper)
+        public TwseService(IConfiguration configuration, TWSETradeContext twseTradeContext, IMapper mapper)
         {
+            _configuration = configuration;
             _twseTradeContext = twseTradeContext;
             _mapper = mapper;
         }
         public async Task<String> UpdateDatabaseAsync(string endDate)
         {
             var startDate = _twseTradeContext.Trades.OrderByDescending(x=>x.TradeDate).FirstOrDefault()?.TradeDate.AddDays(1).ToString("yyyyMMdd");
-            var responseBodyString = await GetDataFromAPIAsync(startDate??"20230101",endDate);
+            var responseBodyString = await GetDataFromAPIAsync(startDate??_configuration.GetValue<string>("StartDate"), endDate);
             var tqvm = ExtractData(responseBodyString);
             if (tqvm.data != null && tqvm.data.Any())
             {
@@ -95,13 +98,13 @@ namespace TWSE_Trade_Web_API.Service
             return rowschanges;            
 
         }
-        static private async Task<string> GetDataFromAPIAsync(string startDate, string endDate)
+        private async Task<string> GetDataFromAPIAsync(string startDate, string endDate)
         {
             Console.WriteLine($"startDate={startDate}&endDate={endDate}");
-            var uri = $"https://www.twse.com.tw/rwd/zh/lending/t13sa710?startDate={startDate}&endDate={endDate}&tradeType=&stockNo=&response=json";
+            var url = _configuration.GetValue<string>("TWSETrade") + $"?startDate={startDate}&endDate={endDate}&tradeType=&stockNo=&response=json";
             var responseString = "";
             HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync(uri);
+            HttpResponseMessage response = await client.GetAsync(url);
             if (response.IsSuccessStatusCode)
             {
                 responseString = await response.Content.ReadAsStringAsync();
