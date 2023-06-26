@@ -98,7 +98,7 @@ namespace TWSE_Trade_Web_API.Profiles
                 case "議借":
                     return "N";
                 default:
-                    return "X";
+                    return null;
             }
         }
         private static DateTime TransformDateTime(string twDateString)
