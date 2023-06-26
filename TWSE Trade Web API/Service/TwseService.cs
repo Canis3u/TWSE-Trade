@@ -28,6 +28,7 @@ namespace TWSE_Trade_Web_API.Service
         public async Task<TwseRespServiceModel> UpdateDBFromTwseAPIAsync(string endDate)
         {
             var startDate = _twseTradeContext.Trades.OrderByDescending(x=>x.TradeDate).FirstOrDefault()?.TradeDate.AddDays(1).ToString("yyyyMMdd");
+            // TODO try-catch Exception
             var tqvm = await _twseRequestHelper.RequestToTwseAPIAsync(startDate??_configuration.GetValue<string>("StartDate"), endDate);
             var trsm = new TwseRespServiceModel();
             if (tqvm.data != null && tqvm.data.Any())
@@ -88,7 +89,6 @@ namespace TWSE_Trade_Web_API.Service
                 x.CreateUser = userName;
                 x.CreateDate = DateTime.Now;
             });
-
             using (TransactionScope ts = new TransactionScope())
             {
                 // Trade很棒都不用處理
