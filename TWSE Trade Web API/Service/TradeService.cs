@@ -25,5 +25,12 @@ namespace TWSE_Trade_Web_API.Service
             var entity = await _tradeRepository.SelectTradeInformatoinByIdAsync(id);
             return entity;
         }
+
+        public async Task<int> UpdateTradeByIdAsync(int id, string user, TradeServiceModel sm)
+        {
+            var trade = _mapper.Map<Trade>(sm);
+            var rowschange = await _tradeRepository.UpdateTradeByIdAsync(id,user,trade);
+            return rowschange;
+        }
     }
 }

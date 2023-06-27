@@ -6,5 +6,6 @@ namespace TWSE_Trade_Web_API.Service.Interface
     public interface ITradeService
     {
         Task<TradeRespServiceModel> ReadTradeInformatoinByIdAsync(int id);
+        Task<int> UpdateTradeByIdAsync(int id, string user, TradeServiceModel sm);
     }
 }
