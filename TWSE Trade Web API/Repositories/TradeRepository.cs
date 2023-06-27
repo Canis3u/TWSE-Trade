@@ -31,7 +31,15 @@ namespace TWSE_Trade_Web_API.Repositories
             trade.UpdateUser = user;
             trade.UpdateDate = DateTime.Now;
             using var conn = new SqlConnection(_connectString);
-            var rowschange = await conn.ExecuteAsync(this.UpdateTradeInformationByIdAsyncSql(id), trade);
+            var rowschange = await conn.ExecuteAsync(this.UpdateTradeByIdAsyncSql(id), trade);
+            return rowschange;
+        }
+        // update trade.status to 2(deleted status) by 1 id
+        public async Task<int> UpdateTradeStatusWithDeletedCodeByIdAsync(int id, string user)
+        {
+            // 押上 UpdateUser UpdateDate
+            using var conn = new SqlConnection(_connectString);
+            var rowschange = await conn.ExecuteAsync(this.UpdateTradeStatusWithDeletedCodeByIdAsyncSql(id), new {UpdateUser=user,UpdateDate=DateTime.Now});
             return rowschange;
         }
         private string SelectTradeInformatoinByIdAsyncSql(int id)
@@ -47,11 +55,18 @@ namespace TWSE_Trade_Web_API.Repositories
                    $"LEFT JOIN ClosingPrice C on C.StockId = S.StockId AND C.TradeDate = T.TradeDate " +
                    $"WHERE T.Id = {id} And Status != 2";
         }
-        private string UpdateTradeInformationByIdAsyncSql(int id)
+        private string UpdateTradeByIdAsyncSql(int id)
         {
             return $"UPDATE Trade SET " +
                    $"Type=@Type, Volume=@Volume, Fee=@Fee, LendingPeriod=@LendingPeriod, " +
                    $"Status=@Status, UpdateUser=@UpdateUser, UpdateDate=@UpdateDate " +
+                   $"WHERE Id= {id} AND Status != 2";
+        }
+
+        private string UpdateTradeStatusWithDeletedCodeByIdAsyncSql(int id)
+        {
+            return $"UPDATE Trade SET " +
+                   $"Status=2, UpdateUser=@UpdateUser, UpdateDate=@UpdateDate " +
                    $"WHERE Id= {id} AND Status != 2";
         }
     }
