@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TWSE_Trade_Web_API.Service.Interface;
 using TWSE_Trade_Web_API.ViewModel;
@@ -14,9 +12,11 @@ namespace TWSE_Trade_Web_API.Controllers
     [ApiController]
     public class TradeController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly ITradeService _tradeService;
-        public TradeController(ITradeService tradeService)
+        public TradeController(IMapper mapper, ITradeService tradeService)
         {
+            _mapper = mapper;
             _tradeService = tradeService;
         }
         // GET: api/<TradeController>
@@ -28,10 +28,11 @@ namespace TWSE_Trade_Web_API.Controllers
 
         // GET api/<TradeController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTradeInformationById(int id)
+        public async Task<TradeRespViewModel> GetTradeInformationById(int id)
         {
-            var r = await _tradeService.SelectTradeByIdAsync(id);
-            return Ok();
+            var trsm = await _tradeService.ReadTradeInformatoinByIdAsync(id);
+            var trvm = _mapper.Map<TradeRespViewModel>(trsm);
+            return trvm;
         }
 
         // PUT api/<TradeController>/5

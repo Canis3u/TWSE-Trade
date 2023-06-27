@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TWSE_Trade_Web_API.Models;
+using TWSE_Trade_Web_API.Repositories;
 using TWSE_Trade_Web_API.Service.Interface;
 using TWSE_Trade_Web_API.ServiceModel;
 
@@ -14,18 +11,19 @@ namespace TWSE_Trade_Web_API.Service
     {
         private readonly TWSETradeContext _twseTradeContext;
         private readonly IMapper _mapper;
-        public TradeService(TWSETradeContext twseTradeContext, IMapper mapper)
+        private readonly TradeRepository _tradeRepository;
+
+        public TradeService(TWSETradeContext twseTradeContext, IMapper mapper, TradeRepository tradeRepository)
         {
             _twseTradeContext = twseTradeContext;
             _mapper = mapper;
+            _tradeRepository = tradeRepository;
         }
 
-        public async Task<TradeRespServiceModel> SelectTradeByIdAsync(int id)
+        public async Task<TradeRespServiceModel> ReadTradeInformatoinByIdAsync(int id)
         {
-            var entity = await _twseTradeContext.Trades.Where(x => x.Id == id)
-                                                 .Include(x => x.Stock)
-                                                 .ThenInclude(x => x.ClosingPrices).ToListAsync();
-            return new TradeRespServiceModel() { };
+            var entity = await _tradeRepository.SelectTradeInformatoinByIdAsync(id);
+            return entity;
         }
     }
 }
