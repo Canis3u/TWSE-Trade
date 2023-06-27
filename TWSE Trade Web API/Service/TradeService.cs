@@ -32,5 +32,10 @@ namespace TWSE_Trade_Web_API.Service
             var rowschange = await _tradeRepository.UpdateTradeByIdAsync(id,user,trade);
             return rowschange;
         }
+        public async Task<int> UpdateTradeStatusWithDeletedCodeByIDAsync(int id, string user)
+        {
+            var rowschange = await _tradeRepository.UpdateTradeStatusWithDeletedCodeByIdAsync(id,user);
+            return rowschange;
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace TWSE_Trade_Web_API.Controllers
 
         // GET api/<TradeController>/5
         [HttpGet("{id}")]
-        public async Task<TradeRespViewModel> GetTradeInformationById(int id)
+        public async Task<TradeRespViewModel> GetTradeInformationByIdAsync(int id)
         {
             var rsm = await _tradeService.ReadTradeInformatoinByIdAsync(id);
             var rvm = _mapper.Map<TradeRespViewModel>(rsm);
@@ -38,18 +38,27 @@ namespace TWSE_Trade_Web_API.Controllers
 
         // PUT api/<TradeController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTradeInformationById(int id, [FromBody] TradeViewModel vm)
+        public async Task<IActionResult> UpdateTradeInformationByIdAsync(int id, [FromBody] TradeViewModel vm)
         {
             var user = "User";
             var sm = _mapper.Map<TradeServiceModel>(vm);
             var rowschange = await _tradeService.UpdateTradeByIdAsync(id,user,sm);
-            return Ok(rowschange);
+            if (rowschange <= 0)
+                return BadRequest("ID Not Found");
+            else
+                return Ok(rowschange);
         }
 
         // DELETE api/<TradeController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> DeleteTradeByIdAsync(int id)
         {
+            var user = "User";
+            var rowschange = await _tradeService.UpdateTradeStatusWithDeletedCodeByIDAsync(id, user);
+            if (rowschange <= 0)
+                return BadRequest("ID Not Found");
+            else
+                return Ok(rowschange);
         }
     }
 }
