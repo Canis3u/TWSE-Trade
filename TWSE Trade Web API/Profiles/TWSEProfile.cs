@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using TWSE_Trade_Web_API.Models;
+using TWSE_Trade_Web_API.Utils;
 
 namespace TWSE_Trade_Web_API.Profiles
 {
@@ -55,7 +56,7 @@ namespace TWSE_Trade_Web_API.Profiles
                 )
                 .ForMember(
                     member => member.Type,
-                    opt => opt.MapFrom(src => TransformTypeName(src[2].ToString()))
+                    opt => opt.MapFrom(src => TransformTypeTools.TransformTypeName(src[2].ToString()))
                 )
                 .ForMember(
                     member => member.Volume,
@@ -83,20 +84,6 @@ namespace TWSE_Trade_Web_API.Profiles
         {
             var splitList = stockString.Trim().Split(' ');
             return splitList[^1];
-        }
-        private static string TransformTypeName(string type)
-        {
-            switch (type)
-            {
-                case "定價":
-                    return "F";
-                case "競價":
-                    return "C";
-                case "議借":
-                    return "N";
-                default:
-                    return null;
-            }
         }
         private static DateTime TransformDateTime(string twDateString)
         {

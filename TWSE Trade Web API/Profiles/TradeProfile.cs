@@ -1,13 +1,29 @@
 ﻿using AutoMapper;
+using TWSE_Trade_Web_API.Models;
 using TWSE_Trade_Web_API.ServiceModel;
+using TWSE_Trade_Web_API.Utils;
 using TWSE_Trade_Web_API.ViewModel;
 
 namespace TWSE_Trade_Web_API.Profiles
 {
     public class TradeProfile:Profile
     {
+
         public TradeProfile()
         {
+            // controller -> service
+            CreateMap<TradeViewModel, TradeServiceModel>()
+                .ForMember(
+                    member => member.Status,
+                    opt => opt.MapFrom(src => 1)
+                ) ;
+            // service -> DB
+            CreateMap<TradeServiceModel, Trade>()
+                .ForMember(
+                    member => member.Type,
+                    opt => opt.MapFrom(src => TransformTypeTools.TransformTypeName(src.Type))
+                );
+
             // service -> conroller
             CreateMap<TradeRespServiceModel, TradeRespViewModel>()
                 .ForMember(
@@ -16,23 +32,8 @@ namespace TWSE_Trade_Web_API.Profiles
                 )
                 .ForMember(
                     member => member.Type,
-                    opt => opt.MapFrom(src => TransformTypeName(src.Type))
+                    opt => opt.MapFrom(src => TransformTypeTools.TransformTypeChar(src.Type))
                 );
-        }
-
-        private static string TransformTypeName(char type)
-        {
-            switch (type)
-            {
-                case 'F':
-                    return "定價";
-                case 'C':
-                    return "競價";
-                case 'N':
-                    return "議借";
-                default:
-                    return null;
-            }
         }
     }
 }
