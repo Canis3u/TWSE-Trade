@@ -327,3 +327,10 @@ testem.log
 .DS_Store
 Thumbs.db
 *.sln
+TWSE-Trade-Web/package-lock.json
+TWSE-Trade-Web/package.json
+TWSE-Trade-Web/angular.json
+TWSE-Trade-Web/.vscode
+TWSE-Trade-Web/tsconfig.spec.json
+TWSE-Trade-Web/tsconfig.json
+TWSE-Trade-Web/tsconfig.app.json
