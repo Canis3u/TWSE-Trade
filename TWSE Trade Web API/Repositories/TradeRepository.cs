@@ -2,6 +2,8 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TWSE_Trade_Web_API.Models;
 using TWSE_Trade_Web_API.ServiceModel;
@@ -17,30 +19,83 @@ namespace TWSE_Trade_Web_API.Repositories
             _config = config;
             _connectString = _config.GetConnectionString("TWSETradeDatabase");
         }
-        // select information by 1 id
+        public async Task<List<TradeRespServiceModel>>SelectTradesInformationAsync(TradeQueryServiceModel serviceModel)
+        {
+            using var connection = new SqlConnection(_connectString);
+            var items = (await connection.QueryAsync<TradeRespServiceModel>(this.SelectTradesInformationAsyncSql(serviceModel))).ToList();
+            return items;
+        }
+        public async Task<int> SelectTradesCountAsync(TradeQueryServiceModel serviceModel)
+        {
+            using var connection = new SqlConnection(_connectString);
+            var count = (await connection.QueryAsync<int>(this.SelectTradesCountAsyncSql(serviceModel))).FirstOrDefault();
+            return count;
+        }
         public async Task<TradeRespServiceModel> SelectTradeInformatoinByIdAsync(int id)
         {
-            using var conn = new SqlConnection(_connectString);
-            var result = await conn.QueryFirstOrDefaultAsync<TradeRespServiceModel>(this.SelectTradeInformatoinByIdAsyncSql(id));
-            return result;
+            using var connection = new SqlConnection(_connectString);
+            var item = await connection.QueryFirstOrDefaultAsync<TradeRespServiceModel>(this.SelectTradeInformatoinByIdAsyncSql(id));
+            return item;
         }
-        // update trade information by 1 id
         public async Task<int> UpdateTradeByIdAsync(int id, string user, Trade trade)
         {
-            // 押上 UpdateUser UpdateDate
             trade.UpdateUser = user;
             trade.UpdateDate = DateTime.Now;
-            using var conn = new SqlConnection(_connectString);
-            var rowschange = await conn.ExecuteAsync(this.UpdateTradeByIdAsyncSql(id), trade);
+            using var connection = new SqlConnection(_connectString);
+            var rowschange = await connection.ExecuteAsync(this.UpdateTradeByIdAsyncSql(id), trade);
             return rowschange;
         }
-        // update trade.status to 2(deleted status) by 1 id
         public async Task<int> UpdateTradeStatusWithDeletedCodeByIdAsync(int id, string user)
         {
-            // 押上 UpdateUser UpdateDate
-            using var conn = new SqlConnection(_connectString);
-            var rowschange = await conn.ExecuteAsync(this.UpdateTradeStatusWithDeletedCodeByIdAsyncSql(id), new {UpdateUser=user,UpdateDate=DateTime.Now});
+            using var connection = new SqlConnection(_connectString);
+            var rowschange = await connection.ExecuteAsync(this.UpdateTradeStatusWithDeletedCodeByIdAsyncSql(id), new {UpdateUser=user,UpdateDate=DateTime.Now});
             return rowschange;
+        }
+
+        private string SelectTradesInformationAsyncSql(TradeQueryServiceModel serviceModel)
+        {
+            var pageIndex = serviceModel.CurrentPage < 1 ? 1 : serviceModel.CurrentPage;
+            var startIndex = (pageIndex - 1) * serviceModel.PageSize;
+            var sqlString = $"SELECT " +
+                            $"T.Id, T.StockId, " +
+                            $"S.Name as StockName, " +
+                            $"T.TradeDate, T.Type, T.Volume, T.Fee, " +
+                            $"C.Price as ClosingPrice, " +
+                            $"T.LendingPeriod " +
+                            $"FROM Trade T " +
+                            $"LEFT JOIN Stock S on T.StockId = S.StockId " +
+                            $"LEFT JOIN ClosingPrice C on C.StockId = S.StockId AND C.TradeDate = T.TradeDate " +
+                            $"WHERE T.Status != 2 ";
+            if (serviceModel.StartDate != null)
+                sqlString += $"AND T.TradeDate>\'{serviceModel.StartDate}\' ";
+            if (serviceModel.EndDate != null)
+                sqlString += $"AND T.TradeDate<\'{serviceModel.EndDate}\' ";
+            if (serviceModel.TradeType != null)
+                sqlString += $"AND T.Type=\'{serviceModel.TradeType}\' ";
+            if (serviceModel.StockId != null)
+                sqlString += $"AND T.StockId=\'{serviceModel.StockId}\' ";
+            sqlString += $"ORDER BY {serviceModel.SortColumn} {serviceModel.SortDirection} ";
+            sqlString += $"OFFSET {startIndex} ROWS FETCH NEXT {serviceModel.PageSize} ROWS ONLY";
+
+            return sqlString;
+        }
+        private string SelectTradesCountAsyncSql(TradeQueryServiceModel serviceModel)
+        {
+            var sqlString = $"SELECT COUNT(1) " +
+                            $"FROM Trade T " +
+                            $"LEFT JOIN Stock S on T.StockId = S.StockId " +
+                            $"LEFT JOIN ClosingPrice C on C.StockId = S.StockId AND C.TradeDate = T.TradeDate " +
+                            $"WHERE T.Status != 2 ";
+            if (serviceModel.StartDate != null)
+                sqlString += $"AND T.TradeDate>\'{serviceModel.StartDate}\' ";
+            if (serviceModel.EndDate != null)
+                sqlString += $"AND T.TradeDate<\'{serviceModel.EndDate}\' ";
+            if (serviceModel.TradeType != null)
+                sqlString += $"AND T.Type=\'{serviceModel.TradeType}\' ";
+            if (serviceModel.StockId != null)
+                sqlString += $"AND T.StockId=\'{serviceModel.StockId}\' ";
+
+            return sqlString;
         }
         private string SelectTradeInformatoinByIdAsyncSql(int id)
         {
@@ -62,7 +117,6 @@ namespace TWSE_Trade_Web_API.Repositories
                    $"Status=@Status, UpdateUser=@UpdateUser, UpdateDate=@UpdateDate " +
                    $"WHERE Id= {id} AND Status != 2";
         }
-
         private string UpdateTradeStatusWithDeletedCodeByIdAsyncSql(int id)
         {
             return $"UPDATE Trade SET " +

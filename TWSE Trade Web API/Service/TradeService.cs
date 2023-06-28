@@ -20,15 +20,22 @@ namespace TWSE_Trade_Web_API.Service
             _tradeRepository = tradeRepository;
         }
 
+        public async Task<TradeQueryRespServiceModel> ReadTradesInformationAsync(TradeQueryServiceModel serviceModel)
+        {
+            var items = await _tradeRepository.SelectTradesInformationAsync(serviceModel);
+            var count = await _tradeRepository.SelectTradesCountAsync(serviceModel);
+            var respServiceModel = new TradeQueryRespServiceModel() { Items = items, TotalCount = count, QueryParams = serviceModel };
+            return respServiceModel;
+        }
         public async Task<TradeRespServiceModel> ReadTradeInformatoinByIdAsync(int id)
         {
-            var entity = await _tradeRepository.SelectTradeInformatoinByIdAsync(id);
-            return entity;
+            var item = await _tradeRepository.SelectTradeInformatoinByIdAsync(id);
+            return item;
         }
 
-        public async Task<int> UpdateTradeByIdAsync(int id, string user, TradeServiceModel sm)
+        public async Task<int> UpdateTradeByIdAsync(int id, string user, TradeUpdateServiceModel serviceModel)
         {
-            var trade = _mapper.Map<Trade>(sm);
+            var trade = _mapper.Map<Trade>(serviceModel);
             var rowschange = await _tradeRepository.UpdateTradeByIdAsync(id,user,trade);
             return rowschange;
         }

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TWSE_Trade_Web_API.ServiceModel
+﻿namespace TWSE_Trade_Web_API.ServiceModel
 {
-    public class TradeServiceModel
+    public class TradeUpdateServiceModel
     {
         public string Type { get; set; }
         public int Volume { get; set; }
