@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="groups">
+    <div class="group date-select D">
+      <label>資料期間：   </label>
+      <input type="date" [(ngModel)]="tradeQuery.startDate">
+      <label>   至   </label>
+      <input type="date" [(ngModel)]="tradeQuery.endDate">
+    </div>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th *ngFor="let col of displayedColumns">{{col}}</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <button (click)="test()">Test</button>
+</div>
