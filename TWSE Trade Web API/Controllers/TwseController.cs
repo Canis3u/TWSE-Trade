@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TWSE_Trade_Web_API.Service.Interface;
 
@@ -36,8 +33,8 @@ namespace TWSE_Trade_Web_API.Controllers
         {
             try
             {
-                var trsm = await _twseService.UpdateDBFromTwseAPIAsync(endDate);
-                return Ok(trsm);
+                var respServiceModel = await _twseService.UpdateDBFromTwseAPIAsync(endDate);
+                return Ok(respServiceModel);
             }
             catch(Exception e)
             {

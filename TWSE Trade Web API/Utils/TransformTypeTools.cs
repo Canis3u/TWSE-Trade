@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace TWSE_Trade_Web_API.Utils
+﻿namespace TWSE_Trade_Web_API.Utils
 {
     public class TransformTypeTools
     {
-        public static string TransformTypeName(string type)
+        public static string TransformTypeName(string typeName)
         {
-            switch (type)
+            switch (typeName)
             {
                 case "定價":
                     return "F";
@@ -21,15 +16,15 @@ namespace TWSE_Trade_Web_API.Utils
                     return null;
             }
         }
-        public static string TransformTypeChar(char type)
+        public static string TransformTypeCode(string typeCode)
         {
-            switch (type)
+            switch (typeCode)
             {
-                case 'F':
+                case "F":
                     return "定價";
-                case 'C':
+                case "C":
                     return "競價";
-                case 'N':
+                case "N":
                     return "議借";
                 default:
                     return null;

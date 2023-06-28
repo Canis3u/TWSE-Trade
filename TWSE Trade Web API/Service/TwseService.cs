@@ -29,23 +29,23 @@ namespace TWSE_Trade_Web_API.Service
         {
             var startDate = _twseTradeContext.Trades.OrderByDescending(x=>x.TradeDate).FirstOrDefault()?.TradeDate.AddDays(1).ToString("yyyyMMdd");
             // TODO try-catch Exception
-            var tqvm = await _twseRequestHelper.RequestToTwseAPIAsync(startDate??_configuration.GetValue<string>("StartDate"), endDate);
-            var trsm = new TwseRespServiceModel();
-            if (tqvm.data != null && tqvm.data.Any())
+            var serviceModel = await _twseRequestHelper.RequestToTwseAPIAsync(startDate??_configuration.GetValue<string>("StartDate"), endDate);
+            var respServiceModel = new TwseRespServiceModel();
+            if (serviceModel.data != null && serviceModel.data.Any())
             {
-                var stockList = _mapper.Map<List<Stock>>(tqvm.data);
-                var closingPriseList = _mapper.Map<List<ClosingPrice>>(tqvm.data);
-                var tradeList = _mapper.Map<List<Trade>>(tqvm.data);
+                var stockList = _mapper.Map<List<Stock>>(serviceModel.data);
+                var closingPriseList = _mapper.Map<List<ClosingPrice>>(serviceModel.data);
+                var tradeList = _mapper.Map<List<Trade>>(serviceModel.data);
                 var rowschanges = await InsertToDBAsync(stockList, closingPriseList, tradeList, "Admin");
-                trsm.code = 0;
-                trsm.message = $"Total {rowschanges} changes.";
+                respServiceModel.code = 0;
+                respServiceModel.message = $"Total {rowschanges} changes.";
             }
             else
             {
-                trsm.code = 9;
-                trsm.message = $"Twse API No Data";
+                respServiceModel.code = 9;
+                respServiceModel.message = $"Twse API No Data";
             }
-            return trsm;
+            return respServiceModel;
         }
         private async Task<int> InsertToDBAsync(List<Stock> stockList, List<ClosingPrice> closingPriceList, List<Trade> tradeList, string userName)
         {

@@ -11,20 +11,17 @@ namespace TWSE_Trade_Web_API.Profiles
 
         public TradeProfile()
         {
-            // controller -> service
-            CreateMap<TradeViewModel, TradeServiceModel>()
+            CreateMap<TradeQueryViewModel, TradeQueryServiceModel>();
+            CreateMap<TradeUpdateViewModel, TradeUpdateServiceModel>()
                 .ForMember(
                     member => member.Status,
                     opt => opt.MapFrom(src => 1)
-                ) ;
-            // service -> DB
-            CreateMap<TradeServiceModel, Trade>()
-                .ForMember(
-                    member => member.Type,
-                    opt => opt.MapFrom(src => TransformTypeTools.TransformTypeName(src.Type))
                 );
+            CreateMap<TradeUpdateServiceModel, Trade>();
 
-            // service -> conroller
+
+            CreateMap<TradeQueryRespServiceModel, TradeQueryRespViewModel>();
+            CreateMap<TradeQueryServiceModel, TradeQueryViewModel>();
             CreateMap<TradeRespServiceModel, TradeRespViewModel>()
                 .ForMember(
                     member => member.ReturnDate,
@@ -32,7 +29,7 @@ namespace TWSE_Trade_Web_API.Profiles
                 )
                 .ForMember(
                     member => member.Type,
-                    opt => opt.MapFrom(src => TransformTypeTools.TransformTypeChar(src.Type))
+                    opt => opt.MapFrom(src => TransformTypeTools.TransformTypeCode(src.Type))
                 );
         }
     }

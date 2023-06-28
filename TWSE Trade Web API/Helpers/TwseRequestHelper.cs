@@ -32,16 +32,16 @@ namespace TWSE_Trade_Web_API.Helpers
                 PropertyNameCaseInsensitive = true,
             };
             // Response string to ServiceModel
-            var tqvm = JsonSerializer.Deserialize<TwseServiceModel>(responseString,options);
-            ValidTradeDate(tqvm, startDate, endDate);
-            return tqvm;
+            var serviceModel = JsonSerializer.Deserialize<TwseServiceModel>(responseString,options);
+            ValidTradeDate(serviceModel, startDate, endDate);
+            return serviceModel;
         }
-        private void ValidTradeDate(TwseServiceModel tqvm, string startDate, string endDate)
+        private void ValidTradeDate(TwseServiceModel serviceModel, string startDate, string endDate)
         {
             CultureInfo culture = new CultureInfo("zh-TW");
             culture.DateTimeFormat.Calendar = new TaiwanCalendar();
             DateTime date;
-            foreach (var d in tqvm.data)
+            foreach (var d in serviceModel.data)
             {
                 try
                 {

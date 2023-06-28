@@ -21,28 +21,31 @@ namespace TWSE_Trade_Web_API.Controllers
             _tradeService = tradeService;
         }
         // GET: api/<TradeController>
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
+        [HttpGet]
+        public async Task<TradeQueryRespViewModel> GetTradesInformationAsync([FromQuery] TradeQueryViewModel viewModel)
+        {
+            var serviceModel = _mapper.Map<TradeQueryServiceModel>(viewModel);
+            var respServiceModel = await _tradeService.ReadTradesInformationAsync(serviceModel);
+            var respViewModel = _mapper.Map<TradeQueryRespViewModel>(respServiceModel);
+            return respViewModel;
+        }
 
         // GET api/<TradeController>/5
         [HttpGet("{id}")]
         public async Task<TradeRespViewModel> GetTradeInformationByIdAsync(int id)
         {
-            var rsm = await _tradeService.ReadTradeInformatoinByIdAsync(id);
-            var rvm = _mapper.Map<TradeRespViewModel>(rsm);
-            return rvm;
+            var respServiceModel = await _tradeService.ReadTradeInformatoinByIdAsync(id);
+            var respViewModel = _mapper.Map<TradeRespViewModel>(respServiceModel);
+            return respViewModel;
         }
 
         // PUT api/<TradeController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTradeInformationByIdAsync(int id, [FromBody] TradeViewModel vm)
+        public async Task<IActionResult> PutTradeInformationByIdAsync(int id, [FromBody] TradeUpdateViewModel viewModel)
         {
             var user = "User";
-            var sm = _mapper.Map<TradeServiceModel>(vm);
-            var rowschange = await _tradeService.UpdateTradeByIdAsync(id,user,sm);
+            var serviceModel = _mapper.Map<TradeUpdateServiceModel>(viewModel);
+            var rowschange = await _tradeService.UpdateTradeByIdAsync(id,user,serviceModel);
             if (rowschange <= 0)
                 return BadRequest("ID Not Found");
             else
