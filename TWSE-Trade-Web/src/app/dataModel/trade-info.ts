@@ -1,14 +1,13 @@
-export interface Trade {
+export interface TradeInfo {
   id: number;
-  stockId: string;
-  stockName: string;
-  tradeDate: Date;
+  stockIdAndName: string;
+  tradeDate: string;
   type: string;
   volume: number;
   fee: number;
   closingPrice: number;
   lendingPeriod: number;
-  returnDate: Date;
+  returnDate: string;
 }
 
 /*

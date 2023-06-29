@@ -1,3 +1,5 @@
+import { DatePipe } from '@angular/common'
+
 export class TradeQuery {
   startDate:string = '';
   endDate:string = '';
@@ -19,5 +21,21 @@ export class TradeQuery {
                         `CurrentPage=${this.currentPage}&` +
                         `PageSize=${this.pageSize}`
     return queryString;
+  }
+
+  public setSortColumn(sortCol:string) {
+    if(this.sortColumn==sortCol){
+      if(this.sortDirection=='ASC'){
+        this.sortDirection='DESC'
+      }
+      else if(this.sortDirection=='DESC'){
+        sortCol = 'Id'
+        this.sortDirection = 'ASC'
+      }
+    }
+    else{
+      this.sortDirection = 'ASC'
+    }
+    this.sortColumn = sortCol
   }
 }

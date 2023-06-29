@@ -1,22 +1,51 @@
 <div class="container">
   <div class="groups">
     <div class="group date-select D">
-      <label>資料期間：   </label>
+      <label>資料期間   </label>
       <input type="date" [(ngModel)]="tradeQuery.startDate">
-      <label>   至   </label>
+      <label>     至     </label>
       <input type="date" [(ngModel)]="tradeQuery.endDate">
     </div>
+    <div class="group date-select D">
+      <label>交易方式   </label>
+      <select [(ngModel)]="tradeQuery.tradeType">
+        <option value=""></option>
+        <option value="F">定價</option>
+        <option value="C">競價</option>
+        <option value="N">議借</option>
+      </select>
+    </div>
+    <div class="group date-select D">
+      <label>股票代號   </label>
+      <input type="text"  [(ngModel)]="tradeQuery.stockId">
+    </div>
+    <button (click)="Query()">Search</button>
   </div>
   <table class="table table-striped">
     <thead>
       <tr>
-        <th *ngFor="let col of displayedColumns">{{col}}</th>
+        <th (click)="SortQuery(col)" *ngFor="let col of displayedColumns">{{col}}</th>
         <th>Update</th>
         <th>Delete</th>
       </tr>
     </thead>
     <tbody>
+      <tr *ngFor="let item of displayedTradeItems">
+        <td>{{ item.tradeDate }}</td>
+        <td>{{ item.stockIdAndName }}</td>
+        <td>{{ item.type }}</td>
+        <td>{{ item.volume }}</td>
+        <td>{{ item.fee }}</td>
+        <td>{{ item.closingPrice }}</td>
+        <td>{{ item.returnDate }}</td>
+        <td>{{ item.lendingPeriod }}</td>
+        <td>
+          <button>edit</button>
+        </td>
+        <td>
+          <button>delete</button>
+        </td>
+      </tr>
     </tbody>
   </table>
-  <button (click)="test()">Test</button>
 </div>

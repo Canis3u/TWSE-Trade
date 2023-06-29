@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { TradeMainComponent } from './trade-main/trade-main.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
