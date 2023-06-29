@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container center">
   <div class="groups">
     <div class="group date-select D">
       <label>資料期間   </label>
@@ -21,10 +21,12 @@
     </div>
     <button (click)="Query()">Search</button>
   </div>
-  <table class="table table-striped">
+  <table class="table" *ngIf="isTableVisible">
     <thead>
       <tr>
-        <th (click)="SortQuery(col)" *ngFor="let col of displayedColumns">{{col}}</th>
+        <th (click)="QueryWithSort(col)" *ngFor="let col of displayedColumns;let i=index;">
+          {{columnArrows[i]}} {{col}} {{columnArrows[i]}}
+        </th>
         <th>Update</th>
         <th>Delete</th>
       </tr>
@@ -43,9 +45,10 @@
           <button>edit</button>
         </td>
         <td>
-          <button>delete</button>
+          <button (click)="ConfirmDelete(item.id)">delete</button>
         </td>
       </tr>
     </tbody>
   </table>
+  <p-confirmDialog></p-confirmDialog>
 </div>

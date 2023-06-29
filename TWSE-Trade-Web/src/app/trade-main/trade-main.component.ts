@@ -1,5 +1,5 @@
-import { TradeQueryResp } from './../dataModel/trade-query-resp';
-import { Component, OnInit} from '@angular/core';
+import { Component} from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 import { TradeService } from '../trade.service';
 import { TradeQuery } from '../dataModel/trade-query';
 import { TradeInfo } from '../dataModel/trade-info';
@@ -10,46 +10,64 @@ import { TradeInfo } from '../dataModel/trade-info';
   styleUrls: ['./trade-main.component.css']
 })
 export class TradeMainComponent {
+  isTableVisible: boolean = false;
   displayedColumns: string[] = ['成交日期', '證券代號名稱', '交易方式', '成交數量', '成交費率', '成交日收盤價', '約定還券日期', '約定借券天數'];
-  tradeTypeSelectList: string[] = ['定價','競價','議借']
+  columnArrows: string[] = ['','','','','','','',''];
   displayedTradeItems: TradeInfo[] = [];
   tradeQuery = new TradeQuery();
 
   constructor(
-    private tradeService: TradeService
+    private tradeService: TradeService,
+    private confirmationService: ConfirmationService
   ){}
+
+  ConfirmDelete(id:number) {
+    this.confirmationService.confirm({
+      message: 'Do you want to delete this record?',
+      header: 'Delete Confirmation',
+      accept: () => {
+        console.log(id);
+      }
+    });
+  }
+
+  InitArrows(){
+    this.columnArrows = ['','','','','','','','']
+  }
 
   Query(){
     this.tradeService.getTradeQuery(this.tradeQuery).subscribe((data)=>{
       this.displayedTradeItems = data.items
     });
+    this.isTableVisible = true;
   }
 
-  SortQuery(col:string){
+  QueryWithSort(col:string){
+    this.InitArrows()
     switch (col) {
       case this.displayedColumns[0]:
-        this.tradeQuery.setSortColumn('TradeDate')
+        this.columnArrows[0] = this.tradeQuery.setSortColumn('TradeDate')
         break
       case this.displayedColumns[1]:
-        this.tradeQuery.setSortColumn('StockId')
+        this.columnArrows[1] = this.tradeQuery.setSortColumn('StockId')
         break
       case this.displayedColumns[2]:
-        this.tradeQuery.setSortColumn('Type')
+        this.columnArrows[2] = this.tradeQuery.setSortColumn('Type')
         break
       case this.displayedColumns[3]:
-        this.tradeQuery.setSortColumn('Volume')
+        this.columnArrows[3] = this.tradeQuery.setSortColumn('Volume')
         break
       case this.displayedColumns[4]:
-        this.tradeQuery.setSortColumn('Fee')
+        this.columnArrows[4] = this.tradeQuery.setSortColumn('Fee')
         break
       case this.displayedColumns[5]:
-        this.tradeQuery.setSortColumn('ClosingPrice')
+        this.columnArrows[5] = this.tradeQuery.setSortColumn('ClosingPrice')
         break
       case this.displayedColumns[6]:
-        this.tradeQuery.setSortColumn('RetrunDate')
+        this.columnArrows[6] = this.tradeQuery.setSortColumn('ReturnDate')
         break
       case this.displayedColumns[7]:
-        this.tradeQuery.setSortColumn('LendingPeriod')
+        this.columnArrows[7] = this.tradeQuery.setSortColumn('LendingPeriod')
         break
       default:
         this.tradeQuery.sortColumn = 'Id'

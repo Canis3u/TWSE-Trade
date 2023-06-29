@@ -1,9 +1,5 @@
 table {
-  width: 80%;
-}
-
-.allweathercast-container {
-  padding: 20px;
+  width: 100%;
 }
 
 table, th, td {
@@ -14,8 +10,15 @@ tr {
   text-align:center;
 }
 
-selects {
+.groups {
+  width: 70%;
   display: inline-block;
   vertical-align: top;
   line-height: 2em;
+  border: 3px solid black;
+  text-align:center;
+  margin: 1rem;
+}
+.center{
+  text-align:center;
 }

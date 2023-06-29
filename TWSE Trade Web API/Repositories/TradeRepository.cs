@@ -56,28 +56,33 @@ namespace TWSE_Trade_Web_API.Repositories
         {
             var pageIndex = serviceModel.CurrentPage < 1 ? 1 : serviceModel.CurrentPage;
             var startIndex = (pageIndex - 1) * serviceModel.PageSize;
-            var sqlString = $"SELECT " +
-                            $"T.Id, T.StockId, " +
-                            $"S.Name as StockName, " +
-                            $"T.TradeDate, T.Type, T.Volume, T.Fee, " +
-                            $"C.Price as ClosingPrice, " +
-                            $"T.LendingPeriod " +
-                            $"FROM Trade T " +
-                            $"LEFT JOIN Stock S on T.StockId = S.StockId " +
-                            $"LEFT JOIN ClosingPrice C on C.StockId = S.StockId AND C.TradeDate = T.TradeDate " +
-                            $"WHERE T.Status != 2 ";
-            if (serviceModel.StartDate != null)
-                sqlString += $"AND T.TradeDate>\'{serviceModel.StartDate}\' ";
-            if (serviceModel.EndDate != null)
-                sqlString += $"AND T.TradeDate<\'{serviceModel.EndDate}\' ";
-            if (serviceModel.TradeType != null)
-                sqlString += $"AND T.Type=\'{serviceModel.TradeType}\' ";
-            if (serviceModel.StockId != null)
-                sqlString += $"AND T.StockId=\'{serviceModel.StockId}\' ";
-            sqlString += $"ORDER BY {serviceModel.SortColumn} {serviceModel.SortDirection} ";
-            sqlString += $"OFFSET {startIndex} ROWS FETCH NEXT {serviceModel.PageSize} ROWS ONLY";
+            var sqlSelectString = $"SELECT " +
+                                  $"T.Id, T.StockId, " +
+                                  $"S.Name as StockName, " +
+                                  $"T.TradeDate, T.Type, T.Volume, T.Fee, " +
+                                  $"C.Price as ClosingPrice, " +
+                                  $"T.LendingPeriod ";
+            if (serviceModel.SortColumn=="ReturnDate")
+                sqlSelectString += $", dateadd(day,T.LendingPeriod,T.TradeDate) as ReturnDate ";
 
-            return sqlString;
+            var sqlFromString = $"FROM Trade T " +
+                                $"LEFT JOIN Stock S on T.StockId = S.StockId " +
+                                $"LEFT JOIN ClosingPrice C on C.StockId = S.StockId AND C.TradeDate = T.TradeDate ";
+            
+            var sqlWhereString = $"WHERE T.Status != 2 ";
+            if (serviceModel.StartDate != null)
+                sqlWhereString += $"AND T.TradeDate>=\'{serviceModel.StartDate}\' ";
+            if (serviceModel.EndDate != null)
+                sqlWhereString += $"AND T.TradeDate<=\'{serviceModel.EndDate}\' ";
+            if (serviceModel.TradeType != null)
+                sqlWhereString += $"AND T.Type=\'{serviceModel.TradeType}\' ";
+            if (serviceModel.StockId != null)
+                sqlWhereString += $"AND T.StockId=\'{serviceModel.StockId}\' ";
+            
+            var sqlOrderString = $"ORDER BY {serviceModel.SortColumn} {serviceModel.SortDirection} ";
+            var sqlOffsetString = $"OFFSET {startIndex} ROWS FETCH NEXT {serviceModel.PageSize} ROWS ONLY";
+
+            return sqlSelectString + sqlFromString + sqlWhereString + sqlOrderString + sqlOffsetString;
         }
         private string SelectTradesCountAsyncSql(TradeQueryServiceModel serviceModel)
         {
@@ -87,9 +92,9 @@ namespace TWSE_Trade_Web_API.Repositories
                             $"LEFT JOIN ClosingPrice C on C.StockId = S.StockId AND C.TradeDate = T.TradeDate " +
                             $"WHERE T.Status != 2 ";
             if (serviceModel.StartDate != null)
-                sqlString += $"AND T.TradeDate>\'{serviceModel.StartDate}\' ";
+                sqlString += $"AND T.TradeDate>=\'{serviceModel.StartDate}\' ";
             if (serviceModel.EndDate != null)
-                sqlString += $"AND T.TradeDate<\'{serviceModel.EndDate}\' ";
+                sqlString += $"AND T.TradeDate>=\'{serviceModel.EndDate}\' ";
             if (serviceModel.TradeType != null)
                 sqlString += $"AND T.Type=\'{serviceModel.TradeType}\' ";
             if (serviceModel.StockId != null)

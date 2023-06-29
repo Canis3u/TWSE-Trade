@@ -24,18 +24,23 @@ export class TradeQuery {
   }
 
   public setSortColumn(sortCol:string) {
+    var arrow = ''
     if(this.sortColumn==sortCol){
       if(this.sortDirection=='ASC'){
         this.sortDirection='DESC'
+        arrow = '↑'
       }
       else if(this.sortDirection=='DESC'){
         sortCol = 'Id'
         this.sortDirection = 'ASC'
+        arrow = ''
       }
     }
     else{
       this.sortDirection = 'ASC'
+      arrow = '↓'
     }
     this.sortColumn = sortCol
+    return arrow
   }
 }
