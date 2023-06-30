@@ -1,0 +1,46 @@
+<div class="container addweathercast-container">
+  <div style="text-align: center">
+    <h3 style="text-align: center">Edit Weathercast Data</h3>
+    <table class="center">
+      <tbody>
+        <tr>
+          <td><label>成交日期 </label></td>
+          <td><input type="text" value={{viewTradeInfo.tradeDate}} readonly></td>
+        </tr>
+        <tr>
+          <td><label>股票代號及名稱 </label></td>
+          <td><input type="text" value={{viewTradeInfo.stockIdAndName}} readonly></td>
+        </tr>
+        <tr>
+          <td><label>交易方式 </label></td>
+          <td>
+            <select [(ngModel)]="viewTradeInfo.type">
+              <option value="F">定價</option>
+              <option value="C">競價</option>
+              <option value="N">議借</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label>成交數量 </label></td>
+          <td><input type="number" value={{viewTradeInfo.volume}} [(ngModel)]="viewTradeInfo.volume"></td>
+        </tr>
+        <tr>
+          <td><label>成交費率 </label></td>
+          <td><input type="number" value={{viewTradeInfo.fee}} [(ngModel)]="viewTradeInfo.fee"></td>
+        </tr>
+        <tr>
+          <td><label>成交日收盤價 </label></td>
+          <td><input type="number" value={{viewTradeInfo.closingPrice}} readonly></td>
+        </tr>
+        <tr>
+          <td><label>約定借券天數 </label></td>
+          <td><input type="number" value={{viewTradeInfo.lendingPeriod}} [(ngModel)]="viewTradeInfo.lendingPeriod"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="text-align: center">
+      <button (click)="UpdateTrade()" style="margin-top: 1rem;" color="primary">Update</button>
+    </div>
+  </div>
+</div>

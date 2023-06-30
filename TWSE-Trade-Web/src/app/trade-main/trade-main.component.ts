@@ -1,5 +1,4 @@
 import { Component} from '@angular/core';
-import { ConfirmationService } from 'primeng/api';
 import { TradeService } from '../trade.service';
 import { TradeQuery } from '../dataModel/trade-query';
 import { TradeInfo } from '../dataModel/trade-info';
@@ -18,27 +17,23 @@ export class TradeMainComponent {
 
   constructor(
     private tradeService: TradeService,
-    private confirmationService: ConfirmationService
   ){}
-
-  ConfirmDelete(id:number) {
-    this.confirmationService.confirm({
-      message: 'Do you want to delete this record?',
-      header: 'Delete Confirmation',
-      accept: () => {
-        console.log(id);
-      }
-    });
-  }
 
   InitArrows(){
     this.columnArrows = ['','','','','','','','']
   }
 
   Query(){
-    this.tradeService.getTradeQuery(this.tradeQuery).subscribe((data)=>{
+    this.tradeService.GetTradeQuery(this.tradeQuery).subscribe((data)=>{
       this.displayedTradeItems = data.items
     });
+  }
+
+  QueryWithFilter(){
+    this.InitArrows()
+    this.tradeQuery.sortColumn = 'Id'
+    this.tradeQuery.sortDirection = 'ASC'
+    this.Query()
     this.isTableVisible = true;
   }
 
@@ -73,6 +68,12 @@ export class TradeMainComponent {
         this.tradeQuery.sortColumn = 'Id'
     }
     this.Query()
+  }
+
+  DeleteById(id:number){
+    this.tradeService.DeleteTradeById(id).subscribe(() => {
+      this.QueryWithFilter()
+    });
   }
 }
 

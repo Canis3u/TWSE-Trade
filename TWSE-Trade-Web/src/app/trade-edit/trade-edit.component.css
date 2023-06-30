@@ -1,0 +1,19 @@
+input:read-only,
+textarea:read-only {
+    background-color: silver;
+}
+.center-block {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+tr {
+  text-align:left;
+}
+tr input{
+  width:100%;
+}
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}

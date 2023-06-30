@@ -1,13 +1,13 @@
 <div class="container center">
   <div class="groups">
     <div class="group date-select D">
-      <label>資料期間   </label>
+      <label>資料期間:   </label>
       <input type="date" [(ngModel)]="tradeQuery.startDate">
       <label>     至     </label>
       <input type="date" [(ngModel)]="tradeQuery.endDate">
     </div>
     <div class="group date-select D">
-      <label>交易方式   </label>
+      <label>交易方式:   </label>
       <select [(ngModel)]="tradeQuery.tradeType">
         <option value=""></option>
         <option value="F">定價</option>
@@ -16,10 +16,10 @@
       </select>
     </div>
     <div class="group date-select D">
-      <label>股票代號   </label>
+      <label>股票代號:   </label>
       <input type="text"  [(ngModel)]="tradeQuery.stockId">
     </div>
-    <button (click)="Query()">Search</button>
+    <button (click)="QueryWithFilter()">Search</button>
   </div>
   <table class="table" *ngIf="isTableVisible">
     <thead>
@@ -42,13 +42,12 @@
         <td>{{ item.returnDate }}</td>
         <td>{{ item.lendingPeriod }}</td>
         <td>
-          <button>edit</button>
+          <button [routerLink]="['/trade-edit', item.id]">edit</button>
         </td>
         <td>
-          <button (click)="ConfirmDelete(item.id)">delete</button>
+          <button (click)="DeleteById(item.id)">delete</button>
         </td>
       </tr>
     </tbody>
   </table>
-  <p-confirmDialog></p-confirmDialog>
 </div>

@@ -13,17 +13,18 @@ export class TradeService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getTradeQuery(tradeQuery:TradeQuery): Observable<TradeQueryResp> {
-    console.log(`${tradeQuery.toQueryString()}`)
+  GetTradeQuery(tradeQuery:TradeQuery): Observable<TradeQueryResp> {
     return this.httpClient.get<TradeQueryResp>(`${this.uri}/${tradeQuery.toQueryString()}`)
   }
 
-  getTradeById(id: number): Observable<TradeInfo> {
-    let resp = this.httpClient.get<TradeInfo>(`${this.uri}/${id}`)
-    resp.subscribe((data)=>{
-      console.log(data)
-    })
-    return resp
+  GetTradeById(id: number): Observable<TradeInfo> {
+    return this.httpClient.get<TradeInfo>(`${this.uri}/${id}`)
+  }
+  UpdateTradeById(id:number, payload:TradeInfo) {
+    return this.httpClient.put(`${this.uri}/${id}`,payload)
+  }
+  DeleteTradeById(id:number) {
+    return this.httpClient.delete(`${this.uri}/${id}`)
   }
 
 }
