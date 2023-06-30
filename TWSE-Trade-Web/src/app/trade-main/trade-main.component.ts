@@ -13,6 +13,7 @@ export class TradeMainComponent {
   displayedColumns: string[] = ['成交日期', '證券代號名稱', '交易方式', '成交數量', '成交費率', '成交日收盤價', '約定還券日期', '約定借券天數'];
   columnArrows: string[] = ['','','','','','','',''];
   displayedTradeItems: TradeInfo[] = [];
+  totalCount: number = 0;
   tradeQuery = new TradeQuery();
 
   constructor(
@@ -26,6 +27,8 @@ export class TradeMainComponent {
   Query(){
     this.tradeService.GetTradeQuery(this.tradeQuery).subscribe((data)=>{
       this.displayedTradeItems = data.items
+      this.totalCount = data.totalCount
+      console.log(data.totalCount)
     });
   }
 

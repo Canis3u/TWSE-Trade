@@ -7,6 +7,9 @@ textarea:read-only {
   margin-right: auto;
   margin-left: auto;
 }
+td {
+  line-height: 1.5em;
+}
 tr {
   text-align:left;
 }

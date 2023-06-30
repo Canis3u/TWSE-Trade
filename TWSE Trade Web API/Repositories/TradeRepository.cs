@@ -94,7 +94,7 @@ namespace TWSE_Trade_Web_API.Repositories
             if (serviceModel.StartDate != null)
                 sqlString += $"AND T.TradeDate>=\'{serviceModel.StartDate}\' ";
             if (serviceModel.EndDate != null)
-                sqlString += $"AND T.TradeDate>=\'{serviceModel.EndDate}\' ";
+                sqlString += $"AND T.TradeDate<=\'{serviceModel.EndDate}\' ";
             if (serviceModel.TradeType != null)
                 sqlString += $"AND T.Type=\'{serviceModel.TradeType}\' ";
             if (serviceModel.StockId != null)
