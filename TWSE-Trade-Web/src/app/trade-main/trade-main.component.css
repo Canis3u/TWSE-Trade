@@ -7,7 +7,12 @@ table, th, td {
 }
 
 th {
+  line-height: 3em;
   background-color: lightblue;
+}
+
+td {
+  line-height: 2em;
 }
 
 tr {
