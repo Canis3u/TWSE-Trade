@@ -27,6 +27,7 @@ namespace TWSE_Trade_Web_API.Service
         }
         public async Task<TwseRespServiceModel> UpdateDBFromTwseAPIAsync(string endDate)
         {
+            endDate = DateTime.Parse(endDate).ToString("yyyyMMdd");
             var startDate = _twseTradeContext.Trades.OrderByDescending(x=>x.TradeDate).FirstOrDefault()?.TradeDate.AddDays(1).ToString("yyyyMMdd");
             // TODO try-catch Exception
             var serviceModel = await _twseRequestHelper.RequestToTwseAPIAsync(startDate??_configuration.GetValue<string>("StartDate"), endDate);

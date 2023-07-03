@@ -6,7 +6,7 @@
       <label>     至     </label>
       <input type="date" [(ngModel)]="tradeQuery.endDate">
     </div>
-    <div class="group date-select D">
+    <div>
       <label>交易方式:   </label>
       <select [(ngModel)]="tradeQuery.tradeType">
         <option value=""></option>
@@ -15,7 +15,7 @@
         <option value="N">議借</option>
       </select>
     </div>
-    <div class="group date-select D">
+    <div>
       <label>股票代號:   </label>
       <input type="text"  [(ngModel)]="tradeQuery.stockId">
     </div>
@@ -60,7 +60,18 @@
   </table>
   <p-confirmDialog header="Confirm" [style]="{width: '30vw'}"></p-confirmDialog>
 </div>
-<div *ngIf="isTableVisible">
-  <label style="text-align: left !important;">總筆數:{{totalCount}}</label>
+<div class="footcontainer">
+  <div class="left">
+    <label style="text-align: left !important;">總筆數:{{totalCount}}</label>
+  </div>
+  <div class="right">
+    <div>
+      <label>更新資料庫 ~ </label>
+      <input type="date" [(ngModel)]="updateDbEndDate">
+    </div>
+    <div style="text-align: center;">
+      <button (click)="UpdateDatabase()" [disabled]="updateButtonDisabled" style="width: 100%;">Go</button>
+    </div>
+  </div>
 </div>
 

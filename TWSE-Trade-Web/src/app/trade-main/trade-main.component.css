@@ -20,7 +20,7 @@ tr {
 }
 
 .groups {
-  width: 60%;
+  width: 30%;
   display: inline-block;
   vertical-align: top;
   line-height: 2em;
@@ -30,4 +30,16 @@ tr {
 }
 .center{
   text-align:center;
+}
+.footcontainer {
+  display: flex;
+  justify-content: space-between;
+}
+.left,
+.right{
+  display: inline-block;
+}
+.left-wrapper,
+.right-wrapper {
+  display: inline-block;
 }

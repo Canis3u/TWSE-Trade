@@ -17,6 +17,8 @@ export class TradeMainComponent {
   totalCount: number = 0;
   pageList:number[] = [];
   lastPage:number = 1;
+  updateDbEndDate:string = '2023-01-01'
+  updateButtonDisabled:boolean = false
 
   tradeQuery = new TradeQuery();
 
@@ -104,6 +106,14 @@ export class TradeMainComponent {
   DeleteById(id:number){
     this.tradeService.DeleteTradeById(id).subscribe(() => {
       this.QueryWithFilter()
+    });
+  }
+
+  UpdateDatabase() {
+    this.updateButtonDisabled = true
+    this.tradeService.UpdateDatabase(this.updateDbEndDate).subscribe((data) => {
+      alert(data.message)
+      this.updateButtonDisabled = false
     });
   }
 }
