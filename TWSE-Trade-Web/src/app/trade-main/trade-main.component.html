@@ -21,6 +21,14 @@
     </div>
     <button (click)="QueryWithFilter()">Search</button>
   </div>
+  <div *ngIf="isTableVisible">
+    <button (click)="PreviousPage()" [disabled]="tradeQuery.currentPage===1">上一頁</button>
+    <label>頁數:</label>
+    <select (change)="SetPage($event)" [(ngModel)]="tradeQuery.currentPage">
+      <option *ngFor="let page of pageList" value={{page}}>{{page}}</option>
+    </select>
+    <button (click)="NextPage()" [disabled]="tradeQuery.currentPage===lastPage">下一頁</button>
+  </div>
   <table class="table" *ngIf="isTableVisible">
     <thead>
       <tr>
@@ -51,6 +59,7 @@
     </tbody>
   </table>
 </div>
-<div>
-  <label style="text-align: left !important;" *ngIf="isTableVisible">總筆數:{{totalCount}}</label>
+<div *ngIf="isTableVisible">
+  <label style="text-align: left !important;">總筆數:{{totalCount}}</label>
 </div>
+

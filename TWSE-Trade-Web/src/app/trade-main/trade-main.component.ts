@@ -14,6 +14,9 @@ export class TradeMainComponent {
   columnArrows: string[] = ['','','','','','','',''];
   displayedTradeItems: TradeInfo[] = [];
   totalCount: number = 0;
+  pageList:number[] = [];
+  lastPage:number = 1;
+
   tradeQuery = new TradeQuery();
 
   constructor(
@@ -24,22 +27,24 @@ export class TradeMainComponent {
     this.columnArrows = ['','','','','','','','']
   }
 
-  Query(){
+  Query(filter:boolean=false){
     this.tradeService.GetTradeQuery(this.tradeQuery).subscribe((data)=>{
       this.displayedTradeItems = data.items
       this.totalCount = data.totalCount
-      console.log(data.totalCount)
+      this.lastPage = Math.ceil(this.totalCount/this.tradeQuery.pageSize)
+      if(filter){
+        this.pageList = Array.from(Array(this.lastPage).keys()).map(x=>x+1);
+      }
     });
   }
-
   QueryWithFilter(){
     this.InitArrows()
+    this.tradeQuery.currentPage = 1
     this.tradeQuery.sortColumn = 'Id'
     this.tradeQuery.sortDirection = 'ASC'
-    this.Query()
+    this.Query(true)
     this.isTableVisible = true;
   }
-
   QueryWithSort(col:string){
     this.InitArrows()
     switch (col) {
@@ -73,10 +78,22 @@ export class TradeMainComponent {
     this.Query()
   }
 
+  SetPage(page:any){
+    this.tradeQuery.currentPage = Number(this.tradeQuery.currentPage)
+    this.Query()
+  }
+  PreviousPage(){
+    this.tradeQuery.currentPage = Number(this.tradeQuery.currentPage) - 1
+    this.Query()
+  }
+  NextPage(){
+    this.tradeQuery.currentPage = Number(this.tradeQuery.currentPage) + 1
+    this.Query()
+  }
+
   DeleteById(id:number){
     this.tradeService.DeleteTradeById(id).subscribe(() => {
       this.QueryWithFilter()
     });
   }
 }
-
