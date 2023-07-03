@@ -1,6 +1,7 @@
 import { TradeService } from './../trade.service';
 import { Component,OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/api';
 import { TradeInfo } from '../dataModel/trade-info';
 
 @Component({
@@ -23,6 +24,7 @@ export class TradeEditComponent implements OnInit {
   };
 
   constructor(
+    private confirmationService: ConfirmationService,
     private tradeService:TradeService,
     private router: Router,
     private route: ActivatedRoute,
@@ -52,6 +54,14 @@ export class TradeEditComponent implements OnInit {
     });
   }
 
+  ConfirmUpdate() {
+    this.confirmationService.confirm({
+        message: 'Are you sure that you want to update this?',
+        accept: () => {
+          this.UpdateTrade()
+        }
+    });
+  }
   UpdateTrade() {
     this.tradeService.UpdateTradeById(this.editId, this.viewTradeInfo).subscribe(() => {
       this.router.navigate(['/']);

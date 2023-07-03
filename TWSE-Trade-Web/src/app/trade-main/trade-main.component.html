@@ -53,11 +53,12 @@
           <button [routerLink]="['/trade-edit', item.id]">edit</button>
         </td>
         <td>
-          <button (click)="DeleteById(item.id)">delete</button>
+          <button (click)="ConfirmDelete(item.id)">delete</button>
         </td>
       </tr>
     </tbody>
   </table>
+  <p-confirmDialog header="Confirm" [style]="{width: '30vw'}"></p-confirmDialog>
 </div>
 <div *ngIf="isTableVisible">
   <label style="text-align: left !important;">總筆數:{{totalCount}}</label>

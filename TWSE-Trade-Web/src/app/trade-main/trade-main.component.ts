@@ -1,4 +1,5 @@
 import { Component} from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 import { TradeService } from '../trade.service';
 import { TradeQuery } from '../dataModel/trade-query';
 import { TradeInfo } from '../dataModel/trade-info';
@@ -21,6 +22,7 @@ export class TradeMainComponent {
 
   constructor(
     private tradeService: TradeService,
+    private confirmationService: ConfirmationService,
   ){}
 
   InitArrows(){
@@ -91,6 +93,14 @@ export class TradeMainComponent {
     this.Query()
   }
 
+  ConfirmDelete(id:number) {
+    this.confirmationService.confirm({
+        message: 'Are you sure that you want to delete this?',
+        accept: () => {
+          this.DeleteById(id)
+        }
+    });
+  }
   DeleteById(id:number){
     this.tradeService.DeleteTradeById(id).subscribe(() => {
       this.QueryWithFilter()
