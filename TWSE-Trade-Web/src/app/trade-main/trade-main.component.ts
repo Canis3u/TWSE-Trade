@@ -1,3 +1,5 @@
+import { StockInfo } from './../dataModel/stock-info';
+import { ModalService } from './../modal.service';
 import { Component} from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { TradeService } from '../trade.service';
@@ -21,10 +23,17 @@ export class TradeMainComponent {
   updateButtonDisabled:boolean = false
 
   tradeQuery = new TradeQuery();
+  stockInfo:StockInfo={
+    stockId:'',
+    name:'',
+    latestTradeDate:'',
+    latestClosingPrice:0
+  };
 
   constructor(
     private tradeService: TradeService,
     private confirmationService: ConfirmationService,
+    private modalService:ModalService
   ){}
 
   InitArrows(){
@@ -115,5 +124,16 @@ export class TradeMainComponent {
       alert(data.message)
       this.updateButtonDisabled = false
     });
+  }
+
+  ModalOpen(modalId:string,stockIdAndName:string) {
+    this.tradeService.GetStockById(stockIdAndName).subscribe((data)=>{
+      this.stockInfo = data
+    });
+    this.modalService.open(modalId)
+
+  }
+  ModalClose() {
+    this.modalService.close()
   }
 }

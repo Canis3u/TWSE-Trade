@@ -19,10 +19,18 @@ namespace TWSE_Trade_Web_API.Profiles
                     opt => opt.MapFrom(src => src.Stock.Name)
                 )
                 .ForMember(
+                    member => member.LatestTradeDate,
+                    opt => opt.MapFrom(src => src.TradeDate.ToString("yyyyMMdd"))
+                )
+                .ForMember(
                     member => member.LatestClosingPrice,
                     opt => opt.MapFrom(src => src.Price)
                 );
-            CreateMap<StockRespServiceModel, StockRespViewModel>();
+            CreateMap<StockRespServiceModel, StockRespViewModel>()
+                .ForMember(
+                    member => member.LatestTradeDate,
+                    opt => opt.MapFrom(src => DateTime.ParseExact(src.LatestTradeDate, "yyyyMMdd", null).ToString("yyyy-MM-dd"))
+                );
         }
     }
 }

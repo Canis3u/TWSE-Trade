@@ -10,6 +10,7 @@ import { ConfirmationService } from 'primeng/api';
 import { AppComponent } from './app.component';
 import { TradeMainComponent } from './trade-main/trade-main.component';
 import { TradeEditComponent } from './trade-edit/trade-edit.component';
+import { ModalComponent } from './modal/modal.component';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { TradeEditComponent } from './trade-edit/trade-edit.component';
     AppComponent,
     TradeMainComponent,
     TradeEditComponent,
+    ModalComponent,
   ],
   imports: [
     BrowserModule,

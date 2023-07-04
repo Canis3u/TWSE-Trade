@@ -6,12 +6,14 @@ import { Observable } from 'rxjs';
 import { TradeInfo } from './dataModel/trade-info';
 import { TradeQueryResp } from './dataModel/trade-query-resp';
 import { TwseResp } from './dataModel/twse-resp';
+import { StockInfo } from './dataModel/stock-info';
 @Injectable({
   providedIn: 'root',
 })
 export class TradeService {
   Uri:string = 'https://localhost:44309/api/Trade'
   TwseuUri:string = 'https://localhost:44309/api/Twse'
+  StockUri:string = 'https://localhost:44309/api/Stock'
 
   constructor(private httpClient: HttpClient) { }
 
@@ -30,6 +32,10 @@ export class TradeService {
   }
   UpdateDatabase(date:string) {
     return this.httpClient.get<TwseResp>(`${this.TwseuUri}/${date}`)
+  }
+  GetStockById(stockIdAndName:string) {
+    var stockId = stockIdAndName.split(" ")[0]
+    return this.httpClient.get<StockInfo>(`${this.StockUri}/${stockId}`)
   }
 
 }
