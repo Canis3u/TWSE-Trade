@@ -9,5 +9,6 @@ namespace TWSE_Trade_Web_API.ServiceModel
     {
         public string StockId { get; set; }
         public string Name { get; set; }
+        public float LatestClosingPrice { get; set; }
     }
 }

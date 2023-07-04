@@ -5,6 +5,6 @@ namespace TWSE_Trade_Web_API.Service.Interface
 {
     public interface IStockService
     {
-        Task<StockRespServiceModel> ReadStockInformatoinByStockIdAsync();
+        Task<StockRespServiceModel> ReadStockInformatoinByStockIdAsync(string stockId);
     }
 }
