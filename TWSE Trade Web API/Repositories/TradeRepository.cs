@@ -21,34 +21,39 @@ namespace TWSE_Trade_Web_API.Repositories
         }
         public async Task<List<TradeRespServiceModel>>SelectTradesInformationAsync(TradeQueryServiceModel serviceModel)
         {
+            var sqlString = this.SelectTradesInformationAsyncSql(serviceModel);
             using var connection = new SqlConnection(_connectString);
-            var items = (await connection.QueryAsync<TradeRespServiceModel>(this.SelectTradesInformationAsyncSql(serviceModel))).ToList();
+            var items = (await connection.QueryAsync<TradeRespServiceModel>(sqlString)).ToList();
             return items;
         }
         public async Task<int> SelectTradesCountAsync(TradeQueryServiceModel serviceModel)
         {
+            var sqlString = this.SelectTradesCountAsyncSql(serviceModel);
             using var connection = new SqlConnection(_connectString);
-            var count = (await connection.QueryAsync<int>(this.SelectTradesCountAsyncSql(serviceModel))).FirstOrDefault();
+            var count = (await connection.QueryAsync<int>(sqlString)).FirstOrDefault();
             return count;
         }
         public async Task<TradeRespServiceModel> SelectTradeInformatoinByIdAsync(int id)
         {
+            var sqlString = this.SelectTradeInformatoinByIdAsyncSql(id);
             using var connection = new SqlConnection(_connectString);
-            var item = await connection.QueryFirstOrDefaultAsync<TradeRespServiceModel>(this.SelectTradeInformatoinByIdAsyncSql(id));
+            var item = await connection.QueryFirstOrDefaultAsync<TradeRespServiceModel>(sqlString);
             return item;
         }
         public async Task<int> UpdateTradeByIdAsync(int id, string user, Trade trade)
         {
+            var sqlString = this.UpdateTradeByIdAsyncSql(id);
             trade.UpdateUser = user;
             trade.UpdateDate = DateTime.Now;
             using var connection = new SqlConnection(_connectString);
-            var rowschange = await connection.ExecuteAsync(this.UpdateTradeByIdAsyncSql(id), trade);
+            var rowschange = await connection.ExecuteAsync(sqlString, trade);
             return rowschange;
         }
         public async Task<int> UpdateTradeStatusWithDeletedCodeByIdAsync(int id, string user)
         {
+            var sqlString = this.UpdateTradeStatusWithDeletedCodeByIdAsyncSql(id);
             using var connection = new SqlConnection(_connectString);
-            var rowschange = await connection.ExecuteAsync(this.UpdateTradeStatusWithDeletedCodeByIdAsyncSql(id), new {UpdateUser=user,UpdateDate=DateTime.Now});
+            var rowschange = await connection.ExecuteAsync(sqlString, new {UpdateUser=user,UpdateDate=DateTime.Now});
             return rowschange;
         }
 
@@ -88,8 +93,6 @@ namespace TWSE_Trade_Web_API.Repositories
         {
             var sqlString = $"SELECT COUNT(1) " +
                             $"FROM Trade T " +
-                            $"LEFT JOIN Stock S on T.StockId = S.StockId " +
-                            $"LEFT JOIN ClosingPrice C on C.StockId = S.StockId AND C.TradeDate = T.TradeDate " +
                             $"WHERE T.Status != 2 ";
             if (serviceModel.StartDate != null)
                 sqlString += $"AND T.TradeDate>=\'{serviceModel.StartDate}\' ";
