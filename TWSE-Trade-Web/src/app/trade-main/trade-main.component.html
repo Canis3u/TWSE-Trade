@@ -1,15 +1,16 @@
+<!DOCTYPE html>
 <div class="container center">
   <div class="groups">
     <div class="group date-select D">
       <label>資料期間:   </label>
-      <input type="date" [(ngModel)]="tradeQuery.startDate">
+      <input type="date" min="2023-01-01" max="2023-06-30" placeholder="請選擇日期" [(ngModel)]="tradeQuery.startDate">
       <label>     至     </label>
-      <input type="date" [(ngModel)]="tradeQuery.endDate">
+      <input type="date" min="2023-01-01" max="2023-06-30" placeholder="請選擇日期" [(ngModel)]="tradeQuery.endDate">
     </div>
     <div>
       <label>交易方式:   </label>
       <select [(ngModel)]="tradeQuery.tradeType">
-        <option value=""></option>
+        <option value="">全部</option>
         <option value="F">定價</option>
         <option value="C">競價</option>
         <option value="N">議借</option>
@@ -17,7 +18,7 @@
     </div>
     <div>
       <label>股票代號:   </label>
-      <input type="text"  [(ngModel)]="tradeQuery.stockId">
+      <input type="text" placeholder="輸入股票代號" [(ngModel)]="tradeQuery.stockId">
     </div>
     <button (click)="QueryWithFilter()">Search</button>
   </div>
@@ -62,12 +63,14 @@
 </div>
 <div class="footcontainer">
   <div class="left">
-    <label style="text-align: left !important;">總筆數:{{totalCount}}</label>
+    <div>
+      <label style="text-align: left !important;">總筆數:{{totalCount}}</label>
+    </div>
   </div>
   <div class="right">
     <div>
-      <label>更新資料庫 ~ </label>
-      <input type="date" [(ngModel)]="updateDbEndDate">
+      <label>更新資料庫 至 </label>
+      <input type="date" min="2023-01-01" max="2023-06-30" [(ngModel)]="updateDbEndDate">
     </div>
     <div style="text-align: center;">
       <button (click)="UpdateDatabase()" [disabled]="updateButtonDisabled" style="width: 100%;">Go</button>
@@ -87,11 +90,11 @@
         <td><label>{{stockInfo.name}} </label></td>
       </tr>
       <tr>
-        <td><label>最近一日成交日 </label></td>
+        <td><label>最新一日成交日 </label></td>
         <td><label>{{stockInfo.latestTradeDate}} </label></td>
       </tr>
       <tr>
-        <td><label>最近一日收盤價 </label></td>
+        <td><label>最新成交日收盤價 </label></td>
         <td><label>{{stockInfo.latestClosingPrice}} </label></td>
       </tr>
     </tbody>

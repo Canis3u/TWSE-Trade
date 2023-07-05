@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TWSE_Trade_Web_API.Models;
 using TWSE_Trade_Web_API.ServiceModel;
 using TWSE_Trade_Web_API.ViewModel;

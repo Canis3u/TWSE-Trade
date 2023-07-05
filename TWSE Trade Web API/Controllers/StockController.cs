@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TWSE_Trade_Web_API.Service.Interface;
 using TWSE_Trade_Web_API.ViewModel;
