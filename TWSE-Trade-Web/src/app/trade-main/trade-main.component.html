@@ -22,7 +22,7 @@
     </div>
     <button (click)="QueryWithFilter()">Search</button>
   </div>
-  <div *ngIf="isTableVisible">
+  <div style="margin-bottom: 1rem;" *ngIf="isTableVisible">
     <button (click)="PreviousPage()" [disabled]="tradeQuery.currentPage===1">上一頁</button>
     <label>頁數:</label>
     <select (change)="SetPage($event)" [(ngModel)]="tradeQuery.currentPage">
@@ -33,7 +33,7 @@
   <table class="table" *ngIf="isTableVisible">
     <thead>
       <tr>
-        <th (click)="QueryWithSort(col)" *ngFor="let col of displayedColumns;let i=index;">
+        <th class="clickable" (click)="QueryWithSort(col)" *ngFor="let col of displayedColumns;let i=index;">
           {{columnArrows[i]}} {{col}} {{columnArrows[i]}}
         </th>
         <th>Update</th>
@@ -43,11 +43,11 @@
     <tbody>
       <tr *ngFor="let item of displayedTradeItems">
         <td>{{ item.tradeDate }}</td>
-        <td (click)="ModalOpen('modal',item.stockIdAndName)">{{ item.stockIdAndName }}</td>
+        <td class="clickable" (click)="ModalOpen('modal',item.stockIdAndName)">{{ item.stockIdAndName }}</td>
         <td>{{ item.type }}</td>
         <td>{{ item.volume }}</td>
-        <td>{{ item.fee }}</td>
-        <td>{{ item.closingPrice }}</td>
+        <td>{{ item.fee | number:'1.2-2' }}</td>
+        <td>{{ item.closingPrice | number:'1.2-2' }}</td>
         <td>{{ item.returnDate }}</td>
         <td>{{ item.lendingPeriod }}</td>
         <td>
@@ -95,7 +95,7 @@
       </tr>
       <tr>
         <td><label>資料留存最後收盤價 </label></td>
-        <td><label>{{stockInfo.latestClosingPrice}} </label></td>
+        <td><label>{{stockInfo.latestClosingPrice | number:'1.2-2' }} </label></td>
       </tr>
     </tbody>
   </table>

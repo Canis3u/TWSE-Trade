@@ -9,8 +9,8 @@ namespace TWSE_Trade_Web_API.ViewModel
         public string TradeDate { get; set; }
         public string Type { get; set; }
         public int Volume { get; set; }
-        public string Fee { get; set; }
-        public string ClosingPrice { get; set; }
+        public float Fee { get; set; }
+        public float ClosingPrice { get; set; }
         public int LendingPeriod { get; set; }
         public string ReturnDate { get; set; }
     }

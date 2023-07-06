@@ -47,14 +47,6 @@ namespace TWSE_Trade_Web_API.Profiles
                     opt => opt.MapFrom(src => TransformTypeTools.TransformTypeCode(src.Type))
                 )
                 .ForMember(
-                    member => member.Fee,
-                    opt => opt.MapFrom(src => $"{src.Fee:0.00}")
-                )
-                .ForMember(
-                    member => member.ClosingPrice,
-                    opt => opt.MapFrom(src => $"{src.ClosingPrice:0.00}")
-                )
-                .ForMember(
                     member => member.TradeDate,
                     opt => opt.MapFrom(src => src.TradeDate.ToString("yyyy-MM-dd"))
                 )

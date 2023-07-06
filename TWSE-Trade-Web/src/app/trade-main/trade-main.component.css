@@ -18,7 +18,9 @@ td {
 tr {
   text-align:center;
 }
-
+.clickable {
+  cursor: pointer;
+}
 .groups {
   width: 30%;
   display: inline-block;
